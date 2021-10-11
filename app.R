@@ -4,7 +4,7 @@ library(leaflet)
 library(dplyr)
 library(ggplot2)
 
-data <- read.csv("updated-post-data.csv")
+data <- read.csv("fatal-police-shootings-data_10.11.21.csv")
 data$race <- dplyr::recode(dplyr::na_if(data$race,""), B = "Black", A = "Asian", H = "Hispanic", W = "White", N = "Native American",
                     O = "Other", .missing = "Unknown")
 data$gender <- dplyr::recode(dplyr::na_if(data$gender,""), M = "Male", F = "Female", .missing = "Unknown")
@@ -20,8 +20,7 @@ ui <- dashboardPage(
   #   tags$style(HTML())
   # )),
   dashboardBody(
-      # Also add some custom CSS to make the title background area the same
-      # color as the rest of the header.
+      # custom CSS to the dashboard look pretty
       tags$head(tags$style(HTML('
         /* logo */
          .skin-blue .main-header .logo {
@@ -29,6 +28,10 @@ ui <- dashboardPage(
                                color: black;
                                font-weight: bold;
          }
+         /* logo when hovered */
+        .skin-blue .main-header .logo:hover {
+                              background-color: #FAE9DA;
+                              }
          /* navbar (rest of the header) */
          .skin-blue .main-header .navbar {
                                background-color: #FAE9DA;
@@ -38,19 +41,15 @@ ui <- dashboardPage(
                                }
                                
                                 .box.box-solid.box-primary>.box-header {
-  color:#fff;
-  background:#666666
+          color:#fff;
+          background:#666666
                     }
-
-.box.box-solid.box-primary{
-border-bottom-color:#666666;
-border-left-color:#666666;
-border-right-color:#666666;
-border-top-color:#666666;
-}
-
-
-                              '))),
+          .box.box-solid.box-primary{
+          border-bottom-color:#666666;
+          border-left-color:#666666;
+          border-right-color:#666666;
+          border-top-color:#666666;
+}    '))),
     fluidRow(
         column(width = 3,
                selectizeInput("name", "Name", choices = c("", unique(data$name))),
@@ -178,11 +177,9 @@ server <- function(input,output,session){
   
   url <- a("Police Shootings Database", href="https://github.com/washingtonpost/data-police-shootings")
   output$text <- renderUI({
-      tagList("This plot was generated with data from The Washington Post's", url,"(updated as of 5/4/21)")
+      tagList("This plot was generated with data from The Washington Post's", url,"(updated as of 9/27/21)")
     })
  
 }
 
 shinyApp(ui = ui, server = server)
-
-
